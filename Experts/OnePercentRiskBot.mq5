@@ -8,6 +8,10 @@
 #property strict
 
 #include <Trade\Trade.mqh>
+input group             "Breakeven Settings"
+input bool              InpUseBreakeven   = true;     // Enable Breakeven?
+input int               InpBreakevenPips  = 200;      // Points to trigger (20 Pips)
+input int               InpLockPips       = 20;       // Points to lock in (to cover spread)
 
 //--- INPUT PARAMETERS
 input group             "Risk Management"
@@ -222,4 +226,38 @@ bool PositionSelectByMagic(long magic)
       }
    }
    return false;
+}
+
+//+------------------------------------------------------------------+
+//| MODULE: Apply Breakeven Logic                                    |
+//+------------------------------------------------------------------+
+void ApplyBreakeven()
+{
+   if(!InpUseBreakeven) return;
+
+   for(int i = PositionsTotal() - 1; i >= 0; i--)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(PositionSelectByTicket(ticket))
+      {
+         if(PositionGetInteger(POSITION_MAGIC) == InpMagicNumber)
+         {
+            double open_price = PositionGetDouble(POSITION_PRICE_OPEN);
+            double current_sl = PositionGetDouble(POSITION_SL);
+            double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+            
+            if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY)
+            {
+               if(bid - open_price > InpBreakevenPips * _Point)
+               {
+                  double new_sl = open_price + (InpLockPips * _Point);
+                  if(new_sl > current_sl) 
+                  {
+                     trade.PositionModify(ticket, new_sl, PositionGetDouble(POSITION_TP));
+                  }
+               }
+            }
+         }
+      }
+   }
 }
