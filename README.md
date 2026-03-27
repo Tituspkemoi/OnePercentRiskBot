@@ -1,25 +1,30 @@
-# OnePercentRiskBot (V3.0)
+# OnePercentRiskBot_Hybrid (V4.0)
 
-An advanced Algorithmic Trading Expert Advisor (EA) built for MetaTrader 5 (MQL5). This bot is designed with a "Capital First" philosophy, prioritizing strict risk management and volatility-based entries.
+A high-performance "Dual-Engine" Expert Advisor (EA) for MetaTrader 5. This version integrates two distinct trading philosophies into a single, modular system.
 
-## 🚀 Key Features
-- **Dynamic 1% Risk Engine:** Automatically calculates lot sizes based on current account equity to ensure no single trade exceeds a 1% loss.
-- **ATR Volatility Scaling:** Uses the Average True Range (ATR) to set dynamic Stop Loss and Take Profit levels that adapt to market conditions.
-- **Equity Guard (Circuit Breaker):** Automatically closes all positions and halts trading if a pre-defined drawdown percentage is hit.
-- **Time & Session Filtering:** Built-in logic to avoid high-spread periods and weekend gaps (Friday protection).
-- **Trend Confirmation:** Employs a Moving Average filter to ensure trades are only taken in the direction of the dominant trend.
+## 🧠 System Architecture: The Hybrid Engine
+The bot operates using a **Logic Controller** that monitors market regimes and switches between two primary strategies:
 
-## 📈 Current Performance
-The system is currently being live-tested on a high-equity account (~$95k), maintaining a healthy margin level of 3000%+ while navigating major currency breakouts (USDCHF).
+1. **Trend Following Engine (MA):**
+   - **Logic:** Identifies momentum when price action holds above the 50-period Moving Average.
+   - **Goal:** To "ride" long-term directional moves in currency pairs like USDCHF.
 
-## 🛠 Tech Stack
-- **Language:** MQL5 (C++ based)
-- **Platform:** MetaTrader 5
-- **Version Control:** Git/GitHub
+2. **Mean Reversion Engine (Bollinger Bands):**
+   - **Logic:** Detects "overextended" prices using 2.0 Standard Deviation bands.
+   - **Goal:** To profit from price "snaps" back to the average during sideways or ranging markets.
 
-## 📁 Project Structure
-- `Experts/OnePercentRiskBot.mq5`: The main source code.
-- `.gitignore`: Configured to exclude compiled `.ex5` files and MetaQuotes logs.
+## 🛡️ Enterprise-Grade Risk Controls
+- **1% Equity Protection:** Dynamic lot sizing ensures a fixed risk percentage of total equity per trade.
+- **Global Equity Guard:** An account-level circuit breaker that halts all activity if a 5% drawdown is reached.
+- **ATR Volatility Scaling:** Stop Loss and Take Profit levels are automatically adjusted based on current market noise (ATR).
 
-## 📜 License
-This project is licensed under the MIT License.
+## 💻 Technical Implementation
+- **Modular Codebase:** Functions are separated into logical modules (Execution, Calculation, Protection) for easy maintenance.
+- **Low Latency:** Optimized indicator handles and buffer copying to ensure rapid execution on tick arrival.
+- **Git Versioning:** Developed using an iterative approach, documented through clear commit history.
+
+## 🚀 How to Use
+1. Clone the repository to your MT5 `MQL5/Experts` folder.
+2. Compile the source code in MetaEditor.
+3. Attach to any H1 chart (Optimized for USDCHF).
+4. Configure Strategy toggles in the Input tab.
